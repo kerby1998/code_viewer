@@ -5,9 +5,12 @@ import 'package:flutter/services.dart';
 import 'code_snippet/list_of_keywords.dart';
 
 class CodeViewer extends StatefulWidget {
+  final double width;
+  final double height;
   final String codeTohighlight;
   final String clipboard;
   final Color backgroundColor;
+  final Function? onClickFunction;
   final TextStyle commentStyle;
   final TextStyle stringStyle;
   final TextStyle numStyle;
@@ -16,16 +19,21 @@ class CodeViewer extends StatefulWidget {
   final TextStyle basicStyle;
   final Icon icon;
 
-  const CodeViewer({Key? key,
-
-    this.codeTohighlight = '''//Thank you for downloading my package
+  const CodeViewer({
+    Key? key,
+    this.codeTohighlight = '''
+    
+    //Thank you for downloading my package
     while (yourHeartBeat) {
   spreadLove();
 }
         ''',
+    this.width = double.infinity,
+    this.height = double.infinity,
     this.clipboard = 'copy the code',
     this.backgroundColor = Colors.black,
     this.basicStyle = const TextStyle(color: Colors.white),
+    this.onClickFunction,
     this.commentStyle = const TextStyle(color: Colors.white60),
     this.stringStyle = const TextStyle(color: Colors.green),
     this.numStyle = const TextStyle(color: Colors.green),
@@ -81,38 +89,32 @@ class _CodeViewerState extends State<CodeViewer> {
       RegExp(patternConcanecator()),
       onMatch: (Match match) {
         if (regComment.hasMatch(match[0]!)) {
-          children.add(TextSpan(
-              text: match[0], style: widget.commentStyle));
+          children.add(TextSpan(text: match[0], style: widget.commentStyle));
           return '';
         }
         if (regOfString.hasMatch(match[0]!)) {
-          children.add(TextSpan(
-              text: match[0], style:widget.stringStyle));
+          children.add(TextSpan(text: match[0], style: widget.stringStyle));
           return '';
         }
         if (regsemi.hasMatch(match[0]!)) {
-          children.add(TextSpan(
-              text: match[0],
-              style: widget.punctuationStyle));
+          children
+              .add(TextSpan(text: match[0], style: widget.punctuationStyle));
           return '';
         }
 
         if (regOfKeyWords.hasMatch(match[0]!)) {
-          children.add(TextSpan(
-              text: match[0], style: widget.keywordStyle));
+          children.add(TextSpan(text: match[0], style: widget.keywordStyle));
           return '';
         }
         if (regOfNum.hasMatch(match[0]!)) {
-          children.add(TextSpan(
-              text: match[0], style: widget.numStyle));
+          children.add(TextSpan(text: match[0], style: widget.numStyle));
           return '';
         }
 
         return '';
       },
       onNonMatch: (String text) {
-        children.add(
-            TextSpan(text: text, style: widget.basicStyle));
+        children.add(TextSpan(text: text, style: widget.basicStyle));
         return '';
       },
     );
@@ -125,6 +127,8 @@ class _CodeViewerState extends State<CodeViewer> {
     return Scaffold(
         body: Center(
             child: Container(
+                height: widget.height,
+                width: widget.width,
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   color: widget.backgroundColor,
@@ -136,16 +140,14 @@ class _CodeViewerState extends State<CodeViewer> {
                       padding: const EdgeInsets.only(
                           top: 20.0, left: 20, bottom: 20),
                       child: SingleChildScrollView(
-                        child: Text.rich(                               TextSpan(children: children),
-
-
+                        child: Text.rich(
+                          TextSpan(children: children),
                           textWidthBasis: TextWidthBasis.longestLine,
-                            style:  const TextStyle(
-                                letterSpacing: 2,
-                                fontFamily: 'Roboto',
-                                fontSize: 18),
-
-                           ),
+                          style: const TextStyle(
+                              letterSpacing: 2,
+                              fontFamily: 'Roboto',
+                              fontSize: 18),
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -156,6 +158,7 @@ class _CodeViewerState extends State<CodeViewer> {
                       onPressed: () {
                         Clipboard.setData(
                             ClipboardData(text: widget.codeTohighlight));
+                        widget.onClickFunction;
                       },
                       icon: widget.icon,
                       tooltip: widget.clipboard,

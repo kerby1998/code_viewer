@@ -54,6 +54,8 @@ This is another exemple of uses :
 | keywordStyle     | Style of the keywords                      |
 | punctuationStyle | Style of the punctuations (, ;)            |
 | icon             | Icon of the button                         |
+| height           | height of the widget                       |
+| width            | width of the widget                        |
 
 
 ## Author
